@@ -12,7 +12,7 @@ app.set('views', path.join(__dirname, 'views')); // Set the views directory
 app.use(express.static(path.join(__dirname, 'public'))); // Assuming your HTML file is in a folder named 'public'
 
 app.get('/data', (req, res) => {
-    dbConnection.query('SELECT * FROM Ligas', (err, results) => {
+    dbConnection.query('SELECT * FROM leagues', (err, results) => {
       if (err) {
         console.error(err.message);
         return res.status(500).send(err);
@@ -22,24 +22,41 @@ app.get('/data', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    dbConnection.query('SELECT * FROM Ligas', (err, results) => {
+    dbConnection.query('SELECT * FROM leagues', (err, results) => {
       if (err) {
         console.error(err.message);
         return res.status(500).send(err);
       }
-      res.render('index', { ligas: results });
+      res.render('index', { leagues: results });
     });
 });
-app.get('/clubs', function(req, res) {
+
+app.get('/teams', function(req, res) {
   var leagueId = req.query.id; // Get the league ID from the query parameter
 
   // Execute your SQL query
-  dbConnection.query('SELECT clubes.nome, clubes.rating, clubes.pontos, clubes.vitorias, clubes.derrotas, clubes.empates, clubes.golos_marcados, clubes.golos_sofridos, Ligas.nome AS liga_nome FROM clubes JOIN Ligas ON clubes.id_liga = Ligas.id WHERE clubes.id_liga = ? ORDER BY clubes.pontos DESC', [leagueId], function(error, results) {
+  dbConnection.query('SELECT * FROM teams WHERE league_id = ?', [leagueId], function(error, results) {
       if (error) {
-          // Handle error
+          console.error(error.message);
+          return res.status(500).send(error);
       } else {
-          // Render the clubs page and pass the clubs and league info to the template
-          res.render('clubs', { clubs: results, league: results[0], leagueId: leagueId });
+          // Render the teams page and pass the teams info to the template
+          res.render('teams', { teams: results, leagueId: leagueId });
+      }
+  });
+});
+
+app.get('/players', function(req, res) {
+  var teamId = req.query.id; // Get the team ID from the query parameter
+
+  // Execute your SQL query
+  dbConnection.query('SELECT * FROM players WHERE club_team_id = ?', [teamId], function(error, results) {
+      if (error) {
+          console.error(error.message);
+          return res.status(500).send(error);
+      } else {
+          // Render the players page and pass the players info to the template
+          res.render('players', { players: results, teamId: teamId });
       }
   });
 });

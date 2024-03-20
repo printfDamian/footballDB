@@ -12,43 +12,41 @@
     <title>Football Season Simulator</title>
   </head>
   <body>
-    <h1 class="text-center">Football Season</h1>
-
+    <h1 class="text-center">Football DB</h1>
     <table class="table table-striped">
       <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">League Name</th>
-          <!-- Add more columns as needed -->
+          <th scope="col">League</th>
+          <th scope="col">Country</th>
+          <!-- Add more headers as needed -->
         </tr>
       </thead>
-      <tbody>
-        <% ligas.forEach(function(liga, index) { %>
-        <tr>
-          <th scope="row"><%= index + 1 %></th>
-          <td>
-            <a
-              href="/clubs?id=<%= liga.id %>"
-              class="link-offset-2 link-underline link-underline-opacity-0">
-              <div class="row">
-                
-                <div style="height: auto; width: 5rem" class="col-6">
-                  <%- include(`../assets/ligas_logo/${liga.id}.svg`) %>
-                </div>
-
-                <div class="col-6 ">
-                    <%= liga.nome %>
-                </div>
-
+    <tbody>
+      <% leagues.forEach(function(league, index) { %>
+      <tr>
+        <th scope="row"><%= index + 1 %></th>
+        <td>
+          <a
+            href="/teams?id=<%= league.id %>"
+            class="link-offset-2 link-underline link-underline-opacity-0">
+            <div class="row">
+    
+              <div class="col-3">
+                  <%= league.name %>
               </div>
-            </a>
-          </td>
-          <!-- Add more cells as needed -->
-        </tr>
-        <% }); %>
-      </tbody>
+    
+            </div>
+          </a>
+        </td>
+        <td>
+          <%= league.country %>
+        </td>
+        <!-- Add more cells as needed -->
+      </tr>
+      <% }); %>
+    </tbody>
     </table>
-
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
